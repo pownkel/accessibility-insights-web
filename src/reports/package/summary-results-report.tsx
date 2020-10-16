@@ -1,5 +1,6 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
+import * as React from 'react';
 import {  ToolData, ScanMetadata } from 'common/types/store-data/unified-data-interface';
 import AccessibilityInsightsReport from './accessibilityInsightsReport';
 import { SummaryReportHtmlGenerator } from 'reports/summary-report-html-generator';
@@ -44,5 +45,9 @@ export class SummaryResultsReport implements AccessibilityInsightsReport.Report 
         );
 
         return html;
+    }
+
+    public asElement(): JSX.Element {
+        return <div>Summary report</div>;
     }
 }

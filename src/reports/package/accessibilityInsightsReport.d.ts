@@ -6,6 +6,7 @@ import * as axe from 'axe-core';
 declare namespace AccessibilityInsightsReport {
     export type Report = {
         asHTML(): string;
+        asElement(): JSX.Element;
     };
 
     export type ScanContext = {

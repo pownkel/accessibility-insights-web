@@ -168,10 +168,11 @@ const prodConfig = {
 
 const packageReportConfig = {
     entry: {
-        report: [path.resolve(__dirname, 'src/reports/package/reporter-factory.ts')],
+        // report: [path.resolve(__dirname, 'src/reports/package/reporter-factory.ts')],
+        main: [path.resolve(__dirname, 'src/reports/package/script-main.ts')],
     },
     module: commonConfig.module,
-    externals: [nodeExternals()],
+    // externals: [nodeExternals()],
     plugins: commonPlugins,
     resolve: commonConfig.resolve,
     name: 'package-report',
@@ -181,10 +182,10 @@ const packageReportConfig = {
         path: path.join(__dirname, 'package/report/bundle'),
         filename: '[name].bundle.js',
         pathinfo: false,
-        library: '[name]',
-        libraryTarget: 'umd',
+        // library: '[name]',
+        // libraryTarget: 'umd',
     },
-    target: 'node',
+    target: 'web',
 };
 
 const packageUIConfig = {
