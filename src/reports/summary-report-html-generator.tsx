@@ -52,4 +52,29 @@ export class SummaryReportHtmlGenerator {
 
         return '<!DOCTYPE html><html lang="en">' + headMarkup + bodyMarkup + '</html>';
     }
+
+    public getBodyElement(
+        scanTimespan: ScanTimespan,
+        scanMetadata: ScanMetadata,
+        results: SummaryScanResults
+    ): JSX.Element {
+        const detailsProps: SummaryReportSectionProps = {
+            deps: {
+                collapsibleControl: ReportCollapsibleContainerControl,
+            },
+            scanTimespan,
+            scanMetadata,
+            results,
+            toUtcString: this.utcDateConverter,
+            secondsToTimeString: this.secondsToTimeStringConverter,
+            getCollapsibleScript: this.getCollapsibleScript,
+        };
+    
+        const props: ReportBodyProps<SummaryReportSectionProps> = {
+            sectionFactory: this.sectionFactory,
+            ...detailsProps,
+        };
+    
+        return <ReportBody<SummaryReportSectionProps> {...props} />;
+    }
 }

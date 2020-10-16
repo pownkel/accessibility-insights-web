@@ -40,7 +40,8 @@ export class ReportBody<SectionPropsType = SectionProps> extends React.Component
         };
 
         return (
-            <BodySection>
+            // <BodySection>
+            <>
                 <HeaderSection {...sectionProps} />
                 <ContentContainer>
                     <TitleSection />
@@ -51,7 +52,8 @@ export class ReportBody<SectionPropsType = SectionProps> extends React.Component
                 <FooterSection>
                     <FooterText {...sectionProps} />
                 </FooterSection>
-            </BodySection>
+            </>
+            // </BodySection>
         );
     }
 }

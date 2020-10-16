@@ -48,6 +48,30 @@ export class SummaryResultsReport implements AccessibilityInsightsReport.Report 
     }
 
     public asElement(): JSX.Element {
-        return <div>Summary report</div>;
+        const reportHtmlGenerator = this.deps.reportHtmlGenerator;
+        const { results, scanDetails } = this.parameters;
+
+        const targetAppInfo = {
+            name: scanDetails.basePageTitle,
+            url: scanDetails.baseUrl,
+        };
+
+        const scanMetadata: ScanMetadata = {
+            targetAppInfo: targetAppInfo,
+            toolData: this.toolInfo,
+            timestamp: null,
+        };
+
+        const timespan: ScanTimespan = {
+            scanStart: scanDetails.scanStart,
+            scanComplete: scanDetails.scanComplete,
+            durationSeconds: scanDetails.durationSeconds,
+        }
+
+        return reportHtmlGenerator.getBodyElement(
+            timespan,
+            scanMetadata,
+            results,
+        );
     }
 }
