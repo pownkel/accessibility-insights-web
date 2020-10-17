@@ -9,23 +9,33 @@ import { NamedFC } from 'common/react/named-fc';
 export const SummaryReportDetailsSection = NamedFC<SummaryReportSectionProps>(
     'SummaryReportDetailsSection',
     props => {
-        const { scanMetadata, scanTimespan, toUtcString, secondsToTimeString } = props;
+        // const { scanMetadata, scanTimespan, toUtcString, secondsToTimeString } = props;
 
-        const createListItem = (label: string, content: string | JSX.Element) => (
-            <li>
-                <span className="label">{`${label} `}</span>
-                <span className="text">{content}</span>
-            </li>
-        );
+        // const createListItem = (label: string, content: string | JSX.Element) => (
+        //     <li>
+        //         <span className="label">{`${label} `}</span>
+        //         <span className="text">{content}</span>
+        //     </li>
+        // );
 
-        const scanStartUTC = toUtcString(scanTimespan.scanStart);
-        const scanCompleteUTC = toUtcString(scanTimespan.scanComplete);
-        const duration = secondsToTimeString(scanTimespan.durationSeconds);
+        // const scanStartUTC = toUtcString(scanTimespan.scanStart);
+        // const scanCompleteUTC = toUtcString(scanTimespan.scanComplete);
+        // const duration = secondsToTimeString(scanTimespan.durationSeconds);
+
+        const [isOn, setIsOn] = React.useState(false);
+
+        const renderButton = () => {
+            const onClick = () => setIsOn(!isOn);
+            const text = isOn ? 'on' : 'off';
+
+            return <button onClick={onClick}>{text}</button>;
+        }
 
         return (
             <div className="crawl-details-section">
-                <h2>Scan details</h2>
-                <ul className="crawl-details-section-list">
+                <h2>Button</h2>
+                {renderButton()}
+                {/* <ul className="crawl-details-section-list">
                     {createListItem(
                         'Target url',
                         <NewTabLinkWithConfirmationDialog
@@ -38,7 +48,7 @@ export const SummaryReportDetailsSection = NamedFC<SummaryReportSectionProps>(
                     {createListItem('Scan start', scanStartUTC)}
                     {createListItem('Scan complete', scanCompleteUTC)}
                     {createListItem('Duration', duration)}
-                </ul>
+                </ul> */}
             </div>
         );
     },
