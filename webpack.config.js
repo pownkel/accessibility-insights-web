@@ -185,6 +185,24 @@ const packageReportConfig = {
         // library: '[name]',
         // libraryTarget: 'umd',
     },
+    optimization: {
+        splitChunks: false,
+        minimize: true,
+        minimizer: [
+            new TerserWebpackPlugin({
+                sourceMap: false,
+                terserOptions: {
+                    compress: true,
+                    mangle: true,
+                    output: {
+                        ascii_only: true,
+                        comments: /^\**!|@preserve|@license|@cc_on/i,
+                        beautify: false,
+                    },
+                },
+            }),
+        ],
+    },
     target: 'web',
 };
 
