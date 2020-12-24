@@ -2,6 +2,7 @@
 // Licensed under the MIT License.
 import { autocompleteRuleConfiguration } from './custom-rules/autocomplete-rule';
 import { colorConfiguration } from './custom-rules/color-rule';
+import { consistentIdentificationConfiguration } from 'scanner/custom-rules/consistent-identification-rule';
 import { cssContentConfiguration } from './custom-rules/css-content-rule';
 import { cssPositioningConfiguration } from './custom-rules/css-positioning-rule';
 import { cuesConfiguration } from './custom-rules/cues-rule';
@@ -39,4 +40,5 @@ export const configuration: RuleConfiguration[] = [
     cssContentConfiguration,
     autocompleteRuleConfiguration,
     headerRuleConfiguration,
+    consistentIdentificationConfiguration,
 ];
