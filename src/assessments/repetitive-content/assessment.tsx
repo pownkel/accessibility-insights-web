@@ -26,11 +26,12 @@ const gettingStartedText: JSX.Element = (
     </React.Fragment>
 );
 
-export const RepetitiveContentAssessment = AssessmentBuilder.Manual({
+export const RepetitiveContentAssessment = AssessmentBuilder.Assisted({
     visualizationType: VisualizationType.RepetitiveContentAssessment,
     key,
     gettingStarted: gettingStartedText,
     title,
     guidance,
     requirements: [BypassBlocks, ConsistentNavigation, ConsistentIdentification],
+    storeDataKey: 'repetitiveContentAssessment',
 });
