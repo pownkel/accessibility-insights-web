@@ -130,6 +130,10 @@ describe('AssessmentInstanceTable', () => {
                 )
                 .returns(() => cols)
                 .verifiable(Times.once());
+            assessmentInstanceTableHandlerMock
+                .setup(a => a.getGroups(props.instancesMap, items))
+                .returns(() => [])
+                .verifiable();
         });
 
         it('renders per snapshot', () => {

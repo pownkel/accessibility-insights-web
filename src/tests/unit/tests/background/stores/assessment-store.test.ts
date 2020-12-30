@@ -541,7 +541,7 @@ describe('AssessmentStore', () => {
 
         assessmentDataConverterMock
             .setup(a =>
-                a.generateAssessmentInstancesMap(
+                a.generateAssessmentResults(
                     initialAssessmentData.generatedAssessmentInstancesMap,
                     payload.selectorMap,
                     requirementKey,
@@ -670,7 +670,7 @@ describe('AssessmentStore', () => {
 
         assessmentDataConverterMock
             .setup(a =>
-                a.generateAssessmentInstancesMap(
+                a.generateAssessmentResults(
                     initialAssessmentData.generatedAssessmentInstancesMap,
                     payload.selectorMap,
                     requirementKey,
@@ -777,7 +777,7 @@ describe('AssessmentStore', () => {
 
         assessmentDataConverterMock
             .setup(a =>
-                a.generateAssessmentInstancesMap(
+                a.generateAssessmentResults(
                     initialAssessmentData.generatedAssessmentInstancesMap,
                     payload.selectorMap,
                     requirementKey,

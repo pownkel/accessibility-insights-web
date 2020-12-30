@@ -392,4 +392,84 @@ describe('AssessmentInstanceTableHandlerTest', () => {
 
         configFactoryMock.verifyAll();
     });
+
+    describe('getGroups', () => {
+        const tableItems = [
+            { key: 'selector4' },
+            { key: 'selector3' },
+            { key: 'selector2' },
+            { key: 'selector1' },
+        ] as InstanceTableRow[];
+
+        it('returns null if there is no grouping data', () => {
+            const instancesMap = {
+                selector1: {} as GeneratedAssessmentInstance,
+                selector2: {} as GeneratedAssessmentInstance,
+                selector3: {} as GeneratedAssessmentInstance,
+                selector4: {} as GeneratedAssessmentInstance,
+            };
+
+            const groups = testSubject.getGroups(instancesMap, tableItems);
+
+            expect(groups).toBeNull();
+        });
+
+        it('sorts and groups items', () => {
+            const group1Info = {
+                key: 'group1',
+                title: 'Group 1',
+            };
+            const group2Info = {
+                key: 'group2',
+                title: 'Group 2',
+            };
+            const group3Info = {
+                key: 'group3',
+                title: 'Group 3',
+            };
+
+            const instancesMap: DictionaryStringTo<GeneratedAssessmentInstance> = {
+                selector1: {
+                    groupBy: group1Info,
+                } as GeneratedAssessmentInstance,
+                selector2: {
+                    groupBy: group1Info,
+                } as GeneratedAssessmentInstance,
+                selector3: {
+                    groupBy: group2Info,
+                } as GeneratedAssessmentInstance,
+                selector4: {
+                    groupBy: group3Info,
+                } as GeneratedAssessmentInstance,
+            };
+
+            const expectedGroups = [
+                {
+                    key: group1Info.key,
+                    name: group1Info.title,
+                    startIndex: 0,
+                    count: 2,
+                },
+                {
+                    key: group2Info.key,
+                    name: group2Info.title,
+                    startIndex: 2,
+                    count: 1,
+                },
+                {
+                    key: group3Info.key,
+                    name: group3Info.title,
+                    startIndex: 3,
+                    count: 1,
+                },
+            ];
+
+            const actualGroups = testSubject.getGroups(instancesMap, tableItems);
+
+            expect(actualGroups).toEqual(expectedGroups);
+            // Chack that
+            expect(tableItems[2].key).toEqual('selector3');
+            expect(tableItems[3].key).toEqual('selector4');
+        });
+    });
 });

@@ -28,6 +28,7 @@ exports[`AssessmentInstanceTable with instances renders per snapshot 1`] = `
       ]
     }
     constrainMode={1}
+    groups={Array []}
     items={
       Array [
         Object {
@@ -66,6 +67,7 @@ exports[`AssessmentInstanceTable with instances renders per snapshot with "none"
       ]
     }
     constrainMode={1}
+    groups={Array []}
     items={
       Array [
         Object {

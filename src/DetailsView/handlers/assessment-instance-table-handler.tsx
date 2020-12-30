@@ -12,7 +12,8 @@ import {
 import { FeatureFlagStoreData } from 'common/types/store-data/feature-flag-store-data';
 import { PathSnippetStoreData } from 'common/types/store-data/path-snippet-store-data';
 import { VisualizationType } from 'common/types/visualization-type';
-import { IColumn } from 'office-ui-fabric-react';
+import { isNil } from 'lodash';
+import { IColumn, IGroup } from 'office-ui-fabric-react';
 import * as React from 'react';
 import { DictionaryStringTo } from 'types/common-types';
 import { DetailsViewActionMessageCreator } from '../actions/details-view-action-message-creator';
@@ -164,6 +165,50 @@ export class AssessmentInstanceTableHandler {
             />
         );
     };
+
+    public getGroups(
+        instancesMap: DictionaryStringTo<GeneratedAssessmentInstance>,
+        tableItems: InstanceTableRow[],
+    ): IGroup[] | null {
+        // Assume either all items have grouping info, or none do, and return null if it is missing
+        if (tableItems.length === 0 || isNil(instancesMap[tableItems[0].key].groupBy)) {
+            return null;
+        }
+
+        tableItems.sort((row1, row2) => {
+            const instance1 = instancesMap[row1.key];
+            const instance2 = instancesMap[row2.key];
+
+            return instance1.groupBy.key.localeCompare(instance2.groupBy.key);
+        });
+
+        const groups = [];
+        let currentGroup: IGroup;
+        tableItems.forEach((item, index) => {
+            const instance = instancesMap[item.key];
+
+            let startNewGroup = false;
+            if (currentGroup !== undefined && currentGroup.key !== instance.groupBy.key) {
+                currentGroup.count = index - currentGroup.startIndex;
+                groups.push(currentGroup);
+                startNewGroup = true;
+            }
+
+            if (currentGroup === undefined || startNewGroup) {
+                currentGroup = {
+                    key: instance.groupBy.key,
+                    name: instance.groupBy.title,
+                    startIndex: index,
+                    count: 0,
+                };
+            }
+        });
+        // Add last group to list
+        currentGroup.count = tableItems.length - currentGroup.startIndex;
+        groups.push(currentGroup);
+
+        return groups;
+    }
 
     private renderSelectedButton = (
         instance: GeneratedAssessmentInstance,

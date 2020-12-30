@@ -79,6 +79,11 @@ export class AssessmentInstanceTable extends React.Component<AssessmentInstanceT
             return defaultMessageComponent.message;
         }
 
+        const groups = this.props.assessmentInstanceTableHandler.getGroups(
+            this.props.instancesMap,
+            items,
+        );
+
         return (
             <div>
                 {this.renderInstanceTableHeader(items)}
@@ -90,6 +95,7 @@ export class AssessmentInstanceTable extends React.Component<AssessmentInstanceT
                     constrainMode={ConstrainMode.horizontalConstrained}
                     onRenderRow={this.renderRow}
                     onItemInvoked={this.onItemInvoked}
+                    groups={groups}
                 />
             </div>
         );
