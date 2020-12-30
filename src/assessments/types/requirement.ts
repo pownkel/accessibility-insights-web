@@ -1,5 +1,6 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
+import { InstanceGroupingConfiguration } from 'assessments/common/instance-grouping-config';
 import { UniquelyIdentifiableInstances } from 'background/instance-identifier-generator';
 import { HyperlinkDefinition } from 'common/types/hyperlink-definition';
 import { ManualTestStatus } from 'common/types/manual-test-status';
@@ -7,6 +8,7 @@ import {
     AssessmentNavState,
     GeneratedAssessmentInstance,
     InstanceIdToInstanceDataMap,
+    TestStepInstance,
 } from 'common/types/store-data/assessment-result-data';
 import { FeatureFlagStoreData } from 'common/types/store-data/feature-flag-store-data';
 import { DetailsViewActionMessageCreator } from 'DetailsView/actions/details-view-action-message-creator';
@@ -56,6 +58,7 @@ export interface Requirement {
     getInstanceStatusColumns?: () => Readonly<IColumn>[];
     getDefaultMessage?: IGetMessageGenerator;
     instanceTableHeaderType?: InstanceTableHeaderType;
+    instanceGroupingConfiguration?: InstanceGroupingConfiguration;
 }
 
 export type VisualHelperToggleConfigDeps = {

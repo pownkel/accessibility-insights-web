@@ -2,6 +2,7 @@
 // Licensed under the MIT License.
 import { AnalyzerConfigurationFactory } from 'assessments/common/analyzer-configuration-factory';
 import { AssistedTestRecordYourResults } from 'assessments/common/assisted-test-record-your-results';
+import { getGroupByPropertyConfig } from 'assessments/common/instance-grouping-config';
 import { PropertyBagColumnRendererFactory } from 'assessments/common/property-bag-column-renderer-factory';
 import { ReportInstanceField } from 'assessments/types/report-instance-field';
 import { NewTabLink } from 'common/components/new-tab-link';
@@ -87,5 +88,6 @@ export const ConsistentIdentification: Requirement = {
         ),
     getDrawer: provider => provider.createHighlightBoxDrawer(),
     getVisualHelperToggle: props => <AssessmentVisualizationEnabledToggle {...props} />,
+    instanceGroupingConfiguration: getGroupByPropertyConfig('role', 'Role'),
     ...content,
 };

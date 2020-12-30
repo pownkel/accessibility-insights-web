@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`InstanceGroupingConfiguration Property value = undefined getGroupKey 1`] = `"(no value)"`;
+
+exports[`InstanceGroupingConfiguration Property value = undefined getGroupTitle 1`] = `"Property = (no value)"`;
+
+exports[`InstanceGroupingConfiguration Property value = value getGroupKey 1`] = `"value"`;
+
+exports[`InstanceGroupingConfiguration Property value = value getGroupTitle 1`] = `"Property = value"`;
