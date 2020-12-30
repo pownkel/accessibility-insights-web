@@ -497,6 +497,10 @@ describe('AssessmentStore', () => {
         const stepConfig: Readonly<Requirement> = {
             ...assessmentsProvider.getStep(assessmentType, 'assessment-1-step-1'),
             isManual: false,
+            instanceGroupingConfiguration: {
+                getGroupKey: () => null,
+                getGroupTitle: () => null,
+            },
         };
 
         const assessmentData = new AssessmentDataBuilder()
@@ -544,6 +548,7 @@ describe('AssessmentStore', () => {
                     instanceIdentifierGeneratorStub,
                     stepConfig.getInstanceStatus,
                     stepConfig.isVisualizationSupportedForResult,
+                    stepConfig.instanceGroupingConfiguration,
                 ),
             )
             .returns(() => expectedInstanceMap);
@@ -614,6 +619,10 @@ describe('AssessmentStore', () => {
             ...assessmentsProvider.getStep(assessmentType, 'assessment-1-step-1'),
             isManual: true,
             getInitialManualTestStatus: mockGetInitialManualTestStatus.object,
+            instanceGroupingConfiguration: {
+                getGroupKey: () => null,
+                getGroupTitle: () => null,
+            },
         };
 
         const assessmentData = new AssessmentDataBuilder()
@@ -668,6 +677,7 @@ describe('AssessmentStore', () => {
                     instanceIdentifierGeneratorStub,
                     stepConfig.getInstanceStatus,
                     stepConfig.isVisualizationSupportedForResult,
+                    stepConfig.instanceGroupingConfiguration,
                 ),
             )
             .returns(() => fullInstanceMap);
@@ -716,6 +726,10 @@ describe('AssessmentStore', () => {
             ...assessmentsProvider.getStep(assessmentType, 'assessment-1-step-1'),
             isManual: true,
             getInitialManualTestStatus: () => ManualTestStatus.FAIL,
+            instanceGroupingConfiguration: {
+                getGroupKey: () => null,
+                getGroupTitle: () => null,
+            },
         };
 
         const assessmentData = new AssessmentDataBuilder()
@@ -770,6 +784,7 @@ describe('AssessmentStore', () => {
                     instanceIdentifierGeneratorStub,
                     stepConfig.getInstanceStatus,
                     stepConfig.isVisualizationSupportedForResult,
+                    stepConfig.instanceGroupingConfiguration,
                 ),
             )
             .returns(() => expectedInstanceMap);

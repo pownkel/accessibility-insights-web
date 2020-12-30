@@ -391,6 +391,7 @@ export class AssessmentStore extends BaseStoreImpl<AssessmentStoreData> {
             config.getInstanceIdentiferGenerator(step),
             stepConfig.getInstanceStatus,
             stepConfig.isVisualizationSupportedForResult,
+            stepConfig.instanceGroupingConfiguration,
         );
         assessmentData.generatedAssessmentInstancesMap = generatedAssessmentInstancesMap;
         assessmentData.testStepStatus[step].isStepScanned = true;

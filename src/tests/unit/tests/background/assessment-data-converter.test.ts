@@ -7,11 +7,13 @@ import { UniquelyIdentifiableInstances } from 'background/instance-identifier-ge
 import { ManualTestStatus } from 'common/types/manual-test-status';
 import {
     AssessmentInstancesMap,
+    GeneratedAssessmentInstance,
     TestStepResult,
 } from 'common/types/store-data/assessment-result-data';
 import { TabStopEvent } from 'common/types/tab-stop-event';
 import { DecoratedAxeNodeResult, HtmlElementAxeResults } from 'injected/scanner-utils';
 import { DictionaryStringTo } from 'types/common-types';
+import { InstanceGroupingConfiguration } from 'assessments/common/instance-grouping-config';
 
 describe('AssessmentDataConverter', () => {
     let testSubject: AssessmentDataConverter;
@@ -56,6 +58,7 @@ describe('AssessmentDataConverter', () => {
                 undefined,
                 null,
                 null,
+                undefined,
             );
 
             expect(instanceMap).toEqual(previouslyGeneratedInstances);
@@ -76,6 +79,7 @@ describe('AssessmentDataConverter', () => {
                 undefined,
                 null,
                 null,
+                undefined,
             );
 
             expect(instanceMap).toEqual(expectedResult);
@@ -123,6 +127,7 @@ describe('AssessmentDataConverter', () => {
                 generateInstanceIdentifierMock.object,
                 () => ManualTestStatus.UNKNOWN,
                 () => true,
+                undefined,
             );
 
             expect(instanceMap).toEqual(expectedResult);
@@ -163,6 +168,7 @@ describe('AssessmentDataConverter', () => {
                 generateInstanceIdentifierMock.object,
                 () => ManualTestStatus.UNKNOWN,
                 () => true,
+                undefined,
             );
 
             expect(instanceMap[identifierStub].propertyBag).toEqual(expectedPropertyBag);
@@ -195,6 +201,7 @@ describe('AssessmentDataConverter', () => {
                     generateInstanceIdentifierMock.object,
                     () => getInstanceStatusResult,
                     () => true,
+                    undefined,
                 );
 
                 expect(instanceMap[identifierStub].testStepResults[testStep].status).toEqual(
@@ -230,6 +237,7 @@ describe('AssessmentDataConverter', () => {
                     generateInstanceIdentifierMock.object,
                     () => ManualTestStatus.UNKNOWN,
                     () => isVisualizationSupportedResult,
+                    undefined,
                 );
 
                 expect(
@@ -315,9 +323,68 @@ describe('AssessmentDataConverter', () => {
                 generateInstanceIdentifierMock.object,
                 () => ManualTestStatus.UNKNOWN,
                 () => true,
+                undefined,
             );
 
             expect(instanceMap).toEqual(expectedResult);
+        });
+
+        it('should use instanceGroupingConfiguration to generate instance grouping data', () => {
+            const propertyBag = { property: 'value' };
+            const selectorMap: DictionaryStringTo<HtmlElementAxeResults> = {
+                [selectorStub]: {
+                    ruleResults: {
+                        rule1: {
+                            html: htmlStub,
+                            id: 'id1',
+                            status: false,
+                            any: [
+                                {
+                                    id: 'rule1',
+                                    data: propertyBag,
+                                },
+                            ],
+                        } as DecoratedAxeNodeResult,
+                    },
+                    target: [selectorStub],
+                },
+            };
+
+            const partialResult = {
+                html: htmlStub,
+                target: [selectorStub],
+                propertyBag: propertyBag,
+            };
+
+            const getKeyMock = Mock.ofType<(instance: GeneratedAssessmentInstance) => string>();
+            const getTitleMock = Mock.ofType<(instance: GeneratedAssessmentInstance) => string>();
+            const expectedGroupingData = {
+                key: 'key',
+                title: 'title',
+            };
+            const resultMatcher = It.isObjectWith<GeneratedAssessmentInstance>(partialResult);
+            getKeyMock.setup(gk => gk(resultMatcher)).returns(() => expectedGroupingData.key);
+            getTitleMock.setup(gt => gt(resultMatcher)).returns(() => expectedGroupingData.title);
+
+            setupGenerateInstanceIdentifierMock(
+                { target: [selectorStub], html: htmlStub },
+                identifierStub,
+            );
+            const instanceMap = testSubject.generateAssessmentInstancesMap(
+                {},
+                selectorMap,
+                testStep,
+                generateInstanceIdentifierMock.object,
+                () => ManualTestStatus.UNKNOWN,
+                () => false,
+                {
+                    getGroupKey: getKeyMock.object,
+                    getGroupTitle: getTitleMock.object,
+                },
+            );
+
+            expect(instanceMap[identifierStub].groupBy).toBeDefined();
+            expect(instanceMap[identifierStub].groupBy).toEqual(expectedGroupingData);
         });
     });
 

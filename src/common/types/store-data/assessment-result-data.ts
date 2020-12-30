@@ -53,7 +53,13 @@ export interface GeneratedAssessmentInstance<T = {}, K = {}> {
     target: string[];
     html: string;
     testStepResults: AssessmentResultType<K>;
+    groupBy?: AssessmentInstanceGroup;
     propertyBag?: T;
+}
+
+export interface AssessmentInstanceGroup {
+    key: string;
+    title: string;
 }
 
 export interface TestStepResult {

@@ -1,9 +1,10 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
-import { forOwn, isEmpty } from 'lodash';
+import { forOwn, isEmpty, isNil } from 'lodash';
 
 import { ManualTestStatus } from 'common/types/manual-test-status';
 import {
+    AssessmentInstanceGroup,
     AssessmentInstancesMap,
     GeneratedAssessmentInstance,
     ManualTestStepResult,
@@ -15,6 +16,7 @@ import { DecoratedAxeNodeResult, HtmlElementAxeResults } from 'injected/scanner-
 import { PartialTabOrderPropertyBag } from 'injected/tab-order-property-bag';
 import { DictionaryStringTo } from 'types/common-types';
 import { UniquelyIdentifiableInstances } from './instance-identifier-generator';
+import { InstanceGroupingConfiguration } from 'assessments/common/instance-grouping-config';
 
 export class AssessmentDataConverter {
     private generateUID: () => string;
@@ -30,6 +32,7 @@ export class AssessmentDataConverter {
         generateInstanceIdentifier: (instance: UniquelyIdentifiableInstances) => string,
         getInstanceStatus: (result: DecoratedAxeNodeResult) => ManualTestStatus,
         isVisualizationSupported: (result: DecoratedAxeNodeResult) => boolean,
+        instanceGroupingConfiguration: InstanceGroupingConfiguration | undefined,
     ): AssessmentInstancesMap {
         let instancesMap: AssessmentInstancesMap = {};
 
@@ -53,6 +56,7 @@ export class AssessmentDataConverter {
                     ruleResult,
                     getInstanceStatus,
                     isVisualizationSupported,
+                    instanceGroupingConfiguration,
                 );
             }
         });
@@ -101,6 +105,7 @@ export class AssessmentDataConverter {
         ruleResult: DecoratedAxeNodeResult,
         getInstanceStatus: (result: DecoratedAxeNodeResult) => ManualTestStatus,
         isVisualizationSupported: (result: DecoratedAxeNodeResult) => boolean,
+        instanceGroupingConfiguration: InstanceGroupingConfiguration | undefined,
     ): GeneratedAssessmentInstance {
         const target: string[] = elementAxeResult.target;
         let testStepResults = {};
@@ -126,11 +131,31 @@ export class AssessmentDataConverter {
         };
         actualPropertyBag = isEmpty(actualPropertyBag) ? null : actualPropertyBag;
 
-        return {
+        const generatedInstance: GeneratedAssessmentInstance = {
             target: target,
             html: html || ruleResult.html,
             testStepResults: testStepResults,
             propertyBag: actualPropertyBag,
+        };
+        generatedInstance.groupBy = this.getGroupingInfoForInstance(
+            generatedInstance,
+            instanceGroupingConfiguration,
+        );
+
+        return generatedInstance;
+    }
+
+    private getGroupingInfoForInstance(
+        instance: GeneratedAssessmentInstance,
+        instanceGroupingConfiguration: InstanceGroupingConfiguration | undefined,
+    ): AssessmentInstanceGroup {
+        if (isNil(instanceGroupingConfiguration)) {
+            return undefined;
+        }
+
+        return {
+            key: instanceGroupingConfiguration.getGroupKey(instance),
+            title: instanceGroupingConfiguration.getGroupTitle(instance),
         };
     }
 
