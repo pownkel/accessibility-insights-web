@@ -383,7 +383,10 @@ export class AssessmentStore extends BaseStoreImpl<AssessmentStoreData> {
         const config = this.assessmentsProvider.forType(test).getVisualizationConfiguration();
         const stepConfig = this.assessmentsProvider.getStep(test, step);
         const assessmentData = config.getAssessmentData(this.state);
-        const { generatedAssessmentInstancesMap: currentGeneratedMap } = assessmentData;
+        const {
+            generatedAssessmentInstancesMap: currentGeneratedMap,
+            assessmentInstanceGroups: currentInstanceGroups,
+        } = assessmentData;
         const generatedAssessmentInstancesMap = this.assessmentDataConverter.generateAssessmentInstancesMap(
             currentGeneratedMap,
             payload.selectorMap,
@@ -393,7 +396,13 @@ export class AssessmentStore extends BaseStoreImpl<AssessmentStoreData> {
             stepConfig.isVisualizationSupportedForResult,
             stepConfig.instanceGroupingConfiguration,
         );
+        const assessmentInstanceGroups = this.assessmentDataConverter.getInstanceGroups(
+            generatedAssessmentInstancesMap,
+            stepConfig.instanceGroupingConfiguration,
+            currentInstanceGroups,
+        );
         assessmentData.generatedAssessmentInstancesMap = generatedAssessmentInstancesMap;
+        assessmentData.assessmentInstanceGroups = assessmentInstanceGroups;
         assessmentData.testStepStatus[step].isStepScanned = true;
         assessmentData.scanIncompleteWarnings = payload.scanIncompleteWarnings;
         this.updateTestStepStatusOnScanUpdate(assessmentData, step, test);

@@ -7,6 +7,7 @@ import {
     AssessmentInstanceGroup,
     AssessmentInstancesMap,
     GeneratedAssessmentInstance,
+    GroupKeyToGroupDataMap,
     ManualTestStepResult,
     TestStepResult,
     UserCapturedInstance,
@@ -98,6 +99,30 @@ export class AssessmentDataConverter {
         };
     }
 
+    public getInstanceGroups(
+        instanceMap: AssessmentInstancesMap,
+        instanceGroupingConfiguration: InstanceGroupingConfiguration | undefined,
+        previousInstanceGroups?: GroupKeyToGroupDataMap,
+    ): GroupKeyToGroupDataMap {
+        if (isNil(instanceGroupingConfiguration)) {
+            return null;
+        }
+
+        const groupsMap: GroupKeyToGroupDataMap = previousInstanceGroups || {};
+
+        forOwn(instanceMap, instance => {
+            const groupKey = instance.groupBy;
+            if (groupsMap[groupKey] === undefined) {
+                groupsMap[groupKey] = {
+                    title: instanceGroupingConfiguration.getGroupTitle(instance),
+                    isExpanded: true,
+                };
+            }
+        });
+
+        return groupsMap;
+    }
+
     private getInitialAssessmentInstance(
         currentInstance: GeneratedAssessmentInstance,
         elementAxeResult: HtmlElementAxeResults,
@@ -137,26 +162,9 @@ export class AssessmentDataConverter {
             testStepResults: testStepResults,
             propertyBag: actualPropertyBag,
         };
-        generatedInstance.groupBy = this.getGroupingInfoForInstance(
-            generatedInstance,
-            instanceGroupingConfiguration,
-        );
+        generatedInstance.groupBy = instanceGroupingConfiguration?.getGroupKey(generatedInstance);
 
         return generatedInstance;
-    }
-
-    private getGroupingInfoForInstance(
-        instance: GeneratedAssessmentInstance,
-        instanceGroupingConfiguration: InstanceGroupingConfiguration | undefined,
-    ): AssessmentInstanceGroup {
-        if (isNil(instanceGroupingConfiguration)) {
-            return undefined;
-        }
-
-        return {
-            key: instanceGroupingConfiguration.getGroupKey(instance),
-            title: instanceGroupingConfiguration.getGroupTitle(instance),
-        };
     }
 
     private getInitialAssessmentFromEvent(

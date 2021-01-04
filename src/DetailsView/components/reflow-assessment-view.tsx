@@ -75,6 +75,7 @@ export const ReflowAssessmentView = NamedFC<ReflowAssessmentViewProps>(
                     assessmentsProvider={props.deps.assessmentsProvider}
                     assessmentNavState={props.assessmentNavState}
                     instancesMap={props.assessmentData.generatedAssessmentInstancesMap}
+                    instanceGroups={props.assessmentData.assessmentInstanceGroups}
                     isRequirementEnabled={props.selectedRequirementIsEnabled}
                     isRequirementScanned={selectedRequirement.data.isStepScanned}
                     assessmentInstanceTableHandler={props.assessmentInstanceTableHandler}

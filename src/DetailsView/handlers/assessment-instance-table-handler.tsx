@@ -5,6 +5,7 @@ import { InstanceTableRow } from 'assessments/types/instance-table-data';
 import { FailureInstanceData } from 'common/types/failure-instance-data';
 import { ManualTestStatus } from 'common/types/manual-test-status';
 import {
+    AssessmentInstanceGroup,
     AssessmentNavState,
     GeneratedAssessmentInstance,
     UserCapturedInstance,
@@ -169,9 +170,14 @@ export class AssessmentInstanceTableHandler {
     public getGroups(
         instancesMap: DictionaryStringTo<GeneratedAssessmentInstance>,
         tableItems: InstanceTableRow[],
+        instanceGroups?: DictionaryStringTo<AssessmentInstanceGroup>,
     ): IGroup[] | null {
         // Assume either all items have grouping info, or none do, and return null if it is missing
-        if (tableItems.length === 0 || isNil(instancesMap[tableItems[0].key].groupBy)) {
+        if (
+            instanceGroups === undefined ||
+            tableItems.length === 0 ||
+            isNil(instancesMap[tableItems[0].key].groupBy)
+        ) {
             return null;
         }
 
@@ -179,16 +185,17 @@ export class AssessmentInstanceTableHandler {
             const instance1 = instancesMap[row1.key];
             const instance2 = instancesMap[row2.key];
 
-            return instance1.groupBy.key.localeCompare(instance2.groupBy.key);
+            return instance1.groupBy.localeCompare(instance2.groupBy);
         });
 
         const groups = [];
         let currentGroup: IGroup;
         tableItems.forEach((item, index) => {
             const instance = instancesMap[item.key];
+            const groupKey = instance.groupBy;
 
             let startNewGroup = false;
-            if (currentGroup !== undefined && currentGroup.key !== instance.groupBy.key) {
+            if (currentGroup !== undefined && currentGroup.key !== groupKey) {
                 currentGroup.count = index - currentGroup.startIndex;
                 groups.push(currentGroup);
                 startNewGroup = true;
@@ -196,10 +203,11 @@ export class AssessmentInstanceTableHandler {
 
             if (currentGroup === undefined || startNewGroup) {
                 currentGroup = {
-                    key: instance.groupBy.key,
-                    name: instance.groupBy.title,
+                    key: groupKey,
+                    name: instanceGroups[groupKey].title,
                     startIndex: index,
                     count: 0,
+                    isCollapsed: !instanceGroups[groupKey].isExpanded,
                 };
             }
         });

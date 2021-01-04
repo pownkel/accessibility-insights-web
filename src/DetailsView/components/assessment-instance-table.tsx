@@ -17,6 +17,7 @@ import { AssessmentDefaultMessageGenerator } from 'assessments/assessment-defaul
 import { InsightsCommandButton } from 'common/components/controls/insights-command-button';
 import { ManualTestStatus } from '../../common/types/manual-test-status';
 import {
+    AssessmentInstanceGroup,
     AssessmentNavState,
     GeneratedAssessmentInstance,
     UserCapturedInstance,
@@ -30,6 +31,7 @@ export const passUnmarkedInstancesButtonAutomationId =
 
 export interface AssessmentInstanceTableProps {
     instancesMap: DictionaryStringTo<GeneratedAssessmentInstance>;
+    instanceGroups?: DictionaryStringTo<AssessmentInstanceGroup>;
     assessmentNavState: AssessmentNavState;
     assessmentInstanceTableHandler: AssessmentInstanceTableHandler;
     instanceTableHeaderType: InstanceTableHeaderType;
@@ -82,6 +84,7 @@ export class AssessmentInstanceTable extends React.Component<AssessmentInstanceT
         const groups = this.props.assessmentInstanceTableHandler.getGroups(
             this.props.instancesMap,
             items,
+            this.props.instanceGroups,
         );
 
         return (

@@ -6,6 +6,7 @@ import { Requirement, VisualHelperToggleConfig } from 'assessments/types/require
 import { Tab } from 'common/itab';
 import {
     AssessmentData,
+    AssessmentInstanceGroup,
     AssessmentNavState,
     GeneratedAssessmentInstance,
     ManualTestStepResult,
@@ -43,6 +44,7 @@ export interface RequirementViewProps {
     assessmentsProvider: AssessmentsProvider;
     assessmentNavState: AssessmentNavState;
     instancesMap: DictionaryStringTo<GeneratedAssessmentInstance>;
+    instanceGroups?: DictionaryStringTo<AssessmentInstanceGroup>;
     isRequirementEnabled: boolean;
     isRequirementScanned: boolean;
     assessmentInstanceTableHandler: AssessmentInstanceTableHandler;
@@ -122,6 +124,7 @@ export class RequirementView extends React.Component<RequirementViewProps> {
                             requirement={requirement}
                             assessmentNavState={this.props.assessmentNavState}
                             instancesMap={this.props.instancesMap}
+                            instanceGroups={this.props.instanceGroups}
                             manualRequirementResultMap={this.props.manualRequirementResultMap}
                             assessmentInstanceTableHandler={
                                 this.props.assessmentInstanceTableHandler

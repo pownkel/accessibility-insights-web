@@ -1,6 +1,6 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
-import { IMock, It, Mock } from 'typemoq';
+import { IMock, It, Mock, Times } from 'typemoq';
 
 import { AssessmentDataConverter } from 'background/assessment-data-converter';
 import { UniquelyIdentifiableInstances } from 'background/instance-identifier-generator';
@@ -358,13 +358,9 @@ describe('AssessmentDataConverter', () => {
 
             const getKeyMock = Mock.ofType<(instance: GeneratedAssessmentInstance) => string>();
             const getTitleMock = Mock.ofType<(instance: GeneratedAssessmentInstance) => string>();
-            const expectedGroupingData = {
-                key: 'key',
-                title: 'title',
-            };
+            const groupKey = 'groupKey';
             const resultMatcher = It.isObjectWith<GeneratedAssessmentInstance>(partialResult);
-            getKeyMock.setup(gk => gk(resultMatcher)).returns(() => expectedGroupingData.key);
-            getTitleMock.setup(gt => gt(resultMatcher)).returns(() => expectedGroupingData.title);
+            getKeyMock.setup(gk => gk(resultMatcher)).returns(() => groupKey);
 
             setupGenerateInstanceIdentifierMock(
                 { target: [selectorStub], html: htmlStub },
@@ -384,7 +380,95 @@ describe('AssessmentDataConverter', () => {
             );
 
             expect(instanceMap[identifierStub].groupBy).toBeDefined();
-            expect(instanceMap[identifierStub].groupBy).toEqual(expectedGroupingData);
+            expect(instanceMap[identifierStub].groupBy).toEqual(groupKey);
+        });
+    });
+
+    describe('getInstanceGroups', () => {
+        const instancesMap = {
+            instance1: {
+                groupBy: 'group1',
+            } as GeneratedAssessmentInstance,
+            instance2: {
+                groupBy: 'group1',
+            } as GeneratedAssessmentInstance,
+            instance3: {
+                groupBy: 'group2',
+            } as GeneratedAssessmentInstance,
+        } as AssessmentInstancesMap;
+        let getGroupTitleMock: IMock<(instance: GeneratedAssessmentInstance) => string>;
+        let instanceGroupingConfiguration: InstanceGroupingConfiguration;
+
+        beforeEach(() => {
+            getGroupTitleMock = Mock.ofInstance(() => null);
+            instanceGroupingConfiguration = {
+                getGroupTitle: getGroupTitleMock.object,
+            } as InstanceGroupingConfiguration;
+        });
+
+        afterEach(() => {
+            getGroupTitleMock.verifyAll();
+        });
+
+        it('returns null for nonexistant grouping config', () => {
+            const result = testSubject.getInstanceGroups(instancesMap, undefined);
+
+            expect(result).toBeNull();
+        });
+
+        it('creates new grouping data', () => {
+            getGroupTitleMock
+                .setup(ggt => ggt(It.isAny()))
+                .returns(instance => instance.groupBy)
+                .verifiable(Times.exactly(2));
+
+            const expectedGroups = {
+                group1: {
+                    title: 'group1',
+                    isExpanded: true,
+                },
+                group2: {
+                    title: 'group2',
+                    isExpanded: true,
+                },
+            };
+
+            const actualGroups = testSubject.getInstanceGroups(
+                instancesMap,
+                instanceGroupingConfiguration,
+            );
+
+            expect(actualGroups).toEqual(expectedGroups);
+        });
+
+        it('does not overwrite existing grouping data', () => {
+            getGroupTitleMock
+                .setup(ggt => ggt(It.isAny()))
+                .returns(instance => instance.groupBy)
+                .verifiable(Times.once());
+
+            const existingGroups = {
+                group1: {
+                    title: 'title',
+                    isExpanded: false,
+                },
+            };
+
+            const expectedGroups = {
+                group2: {
+                    title: 'group2',
+                    isExpanded: true,
+                },
+                ...existingGroups,
+            };
+
+            const actualGroups = testSubject.getInstanceGroups(
+                instancesMap,
+                instanceGroupingConfiguration,
+                existingGroups,
+            );
+
+            expect(actualGroups).toEqual(expectedGroups);
         });
     });
 

@@ -481,6 +481,7 @@ describe('AssessmentStore', () => {
                 ['assessment-1-step-2']: getDefaultTestStepData(),
                 ['assessment-1-step-3']: getDefaultTestStepData(),
             })
+            .with('assessmentInstanceGroups', {})
             .build();
         const initialState = getStateWithAssessment(initialAssessmentData);
 
@@ -502,6 +503,12 @@ describe('AssessmentStore', () => {
                 getGroupTitle: () => null,
             },
         };
+        const assessmentInstanceGroups = {
+            groupKey: {
+                title: 'title',
+                isExpanded: true,
+            },
+        };
 
         const assessmentData = new AssessmentDataBuilder()
             .with('generatedAssessmentInstancesMap', expectedInstanceMap)
@@ -513,6 +520,7 @@ describe('AssessmentStore', () => {
                 ['assessment-1-step-3']: getDefaultTestStepData(),
             })
             .with('scanIncompleteWarnings', [])
+            .with('assessmentInstanceGroups', assessmentInstanceGroups)
             .build();
 
         const finalState = getStateWithAssessment(assessmentData);
@@ -541,7 +549,7 @@ describe('AssessmentStore', () => {
 
         assessmentDataConverterMock
             .setup(a =>
-                a.generateAssessmentResults(
+                a.generateAssessmentInstancesMap(
                     initialAssessmentData.generatedAssessmentInstancesMap,
                     payload.selectorMap,
                     requirementKey,
@@ -552,6 +560,15 @@ describe('AssessmentStore', () => {
                 ),
             )
             .returns(() => expectedInstanceMap);
+        assessmentDataConverterMock
+            .setup(a =>
+                a.getInstanceGroups(
+                    expectedInstanceMap,
+                    stepConfig.instanceGroupingConfiguration,
+                    initialAssessmentData.assessmentInstanceGroups,
+                ),
+            )
+            .returns(() => assessmentInstanceGroups);
 
         createStoreTesterForAssessmentActions('scanCompleted')
             .withActionParam(payload)
@@ -670,7 +687,7 @@ describe('AssessmentStore', () => {
 
         assessmentDataConverterMock
             .setup(a =>
-                a.generateAssessmentResults(
+                a.generateAssessmentInstancesMap(
                     initialAssessmentData.generatedAssessmentInstancesMap,
                     payload.selectorMap,
                     requirementKey,
@@ -777,7 +794,7 @@ describe('AssessmentStore', () => {
 
         assessmentDataConverterMock
             .setup(a =>
-                a.generateAssessmentResults(
+                a.generateAssessmentInstancesMap(
                     initialAssessmentData.generatedAssessmentInstancesMap,
                     payload.selectorMap,
                     requirementKey,

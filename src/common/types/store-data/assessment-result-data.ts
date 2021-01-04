@@ -27,10 +27,12 @@ export interface AssessmentStoreData {
 
 export type InstanceIdToInstanceDataMap = DictionaryStringTo<GeneratedAssessmentInstance>;
 export type RequirementIdToResultMap = DictionaryStringTo<ManualTestStepResult>;
+export type GroupKeyToGroupDataMap = DictionaryStringTo<AssessmentInstanceGroup>;
 
 export interface AssessmentData {
     fullAxeResultsMap: any;
     generatedAssessmentInstancesMap?: InstanceIdToInstanceDataMap;
+    assessmentInstanceGroups?: GroupKeyToGroupDataMap;
     manualTestStepResultMap?: RequirementIdToResultMap;
     testStepStatus: ManualTestStatusData;
     scanIncompleteWarnings?: ScanIncompleteWarningId[];
@@ -53,13 +55,13 @@ export interface GeneratedAssessmentInstance<T = {}, K = {}> {
     target: string[];
     html: string;
     testStepResults: AssessmentResultType<K>;
-    groupBy?: AssessmentInstanceGroup;
+    groupBy?: string;
     propertyBag?: T;
 }
 
 export interface AssessmentInstanceGroup {
-    key: string;
     title: string;
+    isExpanded: boolean;
 }
 
 export interface TestStepResult {

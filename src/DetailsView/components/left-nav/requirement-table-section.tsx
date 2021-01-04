@@ -6,6 +6,7 @@ import { AssessmentsProvider } from 'assessments/types/assessments-provider';
 import { Requirement } from 'assessments/types/requirement';
 import { NamedFC } from 'common/react/named-fc';
 import {
+    AssessmentInstanceGroup,
     AssessmentNavState,
     GeneratedAssessmentInstance,
     ManualTestStepResult,
@@ -23,6 +24,7 @@ export type RequirementTableSectionProps = {
     assessmentNavState: AssessmentNavState;
     requirement: Requirement;
     instancesMap: DictionaryStringTo<GeneratedAssessmentInstance>;
+    instanceGroups?: DictionaryStringTo<AssessmentInstanceGroup>;
     assessmentInstanceTableHandler: AssessmentInstanceTableHandler;
     assessmentsProvider: AssessmentsProvider;
     featureFlagStoreData: FeatureFlagStoreData;
@@ -73,6 +75,7 @@ export const RequirementTableSection = NamedFC<RequirementTableSectionProps>(
                 <h3>Instances</h3>
                 <AssessmentInstanceTable
                     instancesMap={props.instancesMap}
+                    instanceGroups={props.instanceGroups}
                     assessmentInstanceTableHandler={props.assessmentInstanceTableHandler}
                     assessmentNavState={props.assessmentNavState}
                     instanceTableHeaderType={props.requirement.instanceTableHeaderType}

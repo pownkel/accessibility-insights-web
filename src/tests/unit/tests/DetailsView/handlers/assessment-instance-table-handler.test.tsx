@@ -400,8 +400,42 @@ describe('AssessmentInstanceTableHandlerTest', () => {
             { key: 'selector2' },
             { key: 'selector1' },
         ] as InstanceTableRow[];
+        const group1Key = 'group1';
+        const group2Key = 'group2';
+        const group3Key = 'group3';
+        const group1Title = 'Group 1 title';
+        const group2Title = 'Group 2 title';
+        const group3Title = 'Group 3 title';
 
-        it('returns null if there is no grouping data', () => {
+        const instanceGroups = {
+            [group1Key]: {
+                title: group1Title,
+                isExpanded: true,
+            },
+            [group2Key]: {
+                title: group2Title,
+                isExpanded: true,
+            },
+            [group3Key]: {
+                title: group3Title,
+                isExpanded: false,
+            },
+        };
+
+        it('returns null if instances have no grouping data', () => {
+            const instancesMap = {
+                selector1: {} as GeneratedAssessmentInstance,
+                selector2: {} as GeneratedAssessmentInstance,
+                selector3: {} as GeneratedAssessmentInstance,
+                selector4: {} as GeneratedAssessmentInstance,
+            };
+
+            const groups = testSubject.getGroups(instancesMap, tableItems, instanceGroups);
+
+            expect(groups).toBeNull();
+        });
+
+        it('returns null if there is no grouping data given', () => {
             const instancesMap = {
                 selector1: {} as GeneratedAssessmentInstance,
                 selector2: {} as GeneratedAssessmentInstance,
@@ -415,56 +449,46 @@ describe('AssessmentInstanceTableHandlerTest', () => {
         });
 
         it('sorts and groups items', () => {
-            const group1Info = {
-                key: 'group1',
-                title: 'Group 1',
-            };
-            const group2Info = {
-                key: 'group2',
-                title: 'Group 2',
-            };
-            const group3Info = {
-                key: 'group3',
-                title: 'Group 3',
-            };
-
             const instancesMap: DictionaryStringTo<GeneratedAssessmentInstance> = {
                 selector1: {
-                    groupBy: group1Info,
+                    groupBy: group1Key,
                 } as GeneratedAssessmentInstance,
                 selector2: {
-                    groupBy: group1Info,
+                    groupBy: group1Key,
                 } as GeneratedAssessmentInstance,
                 selector3: {
-                    groupBy: group2Info,
+                    groupBy: group2Key,
                 } as GeneratedAssessmentInstance,
                 selector4: {
-                    groupBy: group3Info,
+                    groupBy: group3Key,
                 } as GeneratedAssessmentInstance,
             };
 
             const expectedGroups = [
                 {
-                    key: group1Info.key,
-                    name: group1Info.title,
+                    key: group1Key,
+                    name: group1Title,
                     startIndex: 0,
                     count: 2,
+                    isCollapsed: false,
                 },
                 {
-                    key: group2Info.key,
-                    name: group2Info.title,
+                    key: group2Key,
+                    name: group2Title,
                     startIndex: 2,
                     count: 1,
+                    isCollapsed: false,
                 },
                 {
-                    key: group3Info.key,
-                    name: group3Info.title,
+                    key: group3Key,
+                    name: group3Title,
                     startIndex: 3,
                     count: 1,
+                    isCollapsed: true,
                 },
             ];
 
-            const actualGroups = testSubject.getGroups(instancesMap, tableItems);
+            const actualGroups = testSubject.getGroups(instancesMap, tableItems, instanceGroups);
 
             expect(actualGroups).toEqual(expectedGroups);
             // Chack that
