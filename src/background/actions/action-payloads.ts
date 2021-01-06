@@ -215,3 +215,12 @@ export interface SaveWindowBoundsPayload extends BaseActionPayload {
     windowState: WindowState;
     windowBounds: Rectangle;
 }
+
+export interface ToggleExpandInstanceGroupPayload extends BaseActionPayload {
+    groupKey: string;
+    isExpanded: boolean;
+}
+
+export interface ToggleExpandAllInstanceGroupsPayload extends BaseActionPayload {
+    isExpanded: boolean;
+}

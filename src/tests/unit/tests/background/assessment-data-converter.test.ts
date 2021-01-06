@@ -410,10 +410,17 @@ describe('AssessmentDataConverter', () => {
             getGroupTitleMock.verifyAll();
         });
 
-        it('returns null for nonexistant grouping config', () => {
-            const result = testSubject.getInstanceGroups(instancesMap, undefined);
+        it('returns existing groups it grouping config is undefined', () => {
+            const existingGroups = {
+                group1: {
+                    title: 'group1',
+                    isExpanded: true,
+                },
+            };
 
-            expect(result).toBeNull();
+            const result = testSubject.getInstanceGroups(instancesMap, undefined, existingGroups);
+
+            expect(result).toEqual(existingGroups);
         });
 
         it('creates new grouping data', () => {

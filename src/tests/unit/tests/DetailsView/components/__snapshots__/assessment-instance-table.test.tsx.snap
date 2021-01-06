@@ -28,6 +28,14 @@ exports[`AssessmentInstanceTable with instances renders per snapshot 1`] = `
       ]
     }
     constrainMode={1}
+    groupProps={
+      Object {
+        "headerProps": Object {
+          "onToggleCollapse": [Function],
+        },
+        "onToggleCollapseAll": [Function],
+      }
+    }
     groups={Array []}
     items={
       Array [
@@ -67,6 +75,14 @@ exports[`AssessmentInstanceTable with instances renders per snapshot with "none"
       ]
     }
     constrainMode={1}
+    groupProps={
+      Object {
+        "headerProps": Object {
+          "onToggleCollapse": [Function],
+        },
+        "onToggleCollapseAll": [Function],
+      }
+    }
     groups={Array []}
     items={
       Array [

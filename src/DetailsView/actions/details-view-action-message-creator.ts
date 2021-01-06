@@ -644,4 +644,25 @@ export class DetailsViewActionMessageCreator extends DevToolActionMessageCreator
             this.telemetryFactory.forLeftNavPanelExpanded(event),
         );
     };
+
+    public toggleExpandAssessmentInstanceGroup = (groupKey: string, isExpanded: boolean) => {
+        const payload = {
+            groupKey: groupKey,
+            isExpanded: isExpanded,
+        };
+        this.dispatcher.dispatchMessage({
+            messageType: Messages.Assessment.ToggleExpandAssessmentInstanceGroup,
+            payload: payload,
+        });
+    };
+
+    public toggleExpandAllAssessmentInstanceGroups = (isExpanded: boolean) => {
+        const payload = {
+            isExpanded: isExpanded,
+        };
+        this.dispatcher.dispatchMessage({
+            messageType: Messages.Assessment.ToggleExpandAllAssessmentInstanceGroups,
+            payload: payload,
+        });
+    };
 }

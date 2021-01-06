@@ -29,6 +29,8 @@ exports[`DetailsViewContainer render content render once; should call details vi
         "startOverAllAssessments": [Function],
         "switchToTargetTab": [Function],
         "telemetryFactory": undefined,
+        "toggleExpandAllAssessmentInstanceGroups": [Function],
+        "toggleExpandAssessmentInstanceGroup": [Function],
         "undoManualRequirementStatusChange": [Function],
         "undoManualTestStatusChange": [Function],
       },

@@ -131,7 +131,7 @@ describe('AssessmentInstanceTable', () => {
                 .returns(() => cols)
                 .verifiable(Times.once());
             assessmentInstanceTableHandlerMock
-                .setup(a => a.getGroups(props.instancesMap, items))
+                .setup(a => a.getGroups(props.instancesMap, items, props.instanceGroups))
                 .returns(() => [])
                 .verifiable();
         });
@@ -223,6 +223,7 @@ describe('AssessmentInstanceTable', () => {
     ): AssessmentInstanceTableProps {
         return {
             instancesMap: instancesMap,
+            instanceGroups: {},
             columnConfiguration: [],
             assessmentNavState: {
                 selectedTestSubview: selectedTestStep,

@@ -21,6 +21,8 @@ import {
     ToggleActionPayload,
     UpdateSelectedDetailsViewPayload,
     LoadAssessmentPayload,
+    ToggleExpandInstanceGroupPayload,
+    ToggleExpandAllInstanceGroupsPayload,
 } from './action-payloads';
 
 export class AssessmentActions {
@@ -48,4 +50,6 @@ export class AssessmentActions {
     public readonly updateTargetTabId = new Action<number>();
     public readonly continuePreviousAssessment = new Action<number>();
     public readonly LoadAssessment = new Action<LoadAssessmentPayload>();
+    public readonly toggleExpandAssessmentInstanceGroup = new Action<ToggleExpandInstanceGroupPayload>();
+    public readonly toggleExpandAllAssessmentInstanceGroups = new Action<ToggleExpandAllInstanceGroupsPayload>();
 }

@@ -105,7 +105,7 @@ export class AssessmentDataConverter {
         previousInstanceGroups?: GroupKeyToGroupDataMap,
     ): GroupKeyToGroupDataMap {
         if (isNil(instanceGroupingConfiguration)) {
-            return null;
+            return previousInstanceGroups;
         }
 
         const groupsMap: GroupKeyToGroupDataMap = previousInstanceGroups || {};

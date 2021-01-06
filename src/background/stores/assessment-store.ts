@@ -22,13 +22,15 @@ import {
     ScanCompletedPayload,
     ScanUpdatePayload,
 } from 'injected/analyzers/analyzer';
-import { forEach, isEmpty, pickBy } from 'lodash';
+import { forEach, isEmpty, isNil, pickBy } from 'lodash';
 import { DictionaryStringTo } from 'types/common-types';
 import {
     AddResultDescriptionPayload,
     ExpandTestNavPayload,
     SelectTestSubviewPayload,
     LoadAssessmentPayload,
+    ToggleExpandAllInstanceGroupsPayload,
+    ToggleExpandInstanceGroupPayload,
 } from '../actions/action-payloads';
 import { AssessmentDataConverter } from '../assessment-data-converter';
 import { InitialAssessmentStoreDataGenerator } from '../initial-assessment-store-data-generator';
@@ -124,6 +126,12 @@ export class AssessmentStore extends BaseStoreImpl<AssessmentStoreData> {
             this.onContinuePreviousAssessment,
         );
         this.assessmentActions.LoadAssessment.addListener(this.onLoadAssessment);
+        this.assessmentActions.toggleExpandAssessmentInstanceGroup.addListener(
+            this.updateInstanceGroupExpanded,
+        );
+        this.assessmentActions.toggleExpandAllAssessmentInstanceGroups.addListener(
+            this.setAllInstanceGroupsExpanded,
+        );
     }
 
     private updateTargetTabWithId(tabId: number): void {
@@ -440,6 +448,34 @@ export class AssessmentStore extends BaseStoreImpl<AssessmentStoreData> {
     private onResetAllAssessmentsData = (targetTabId: number): void => {
         this.state = this.generateDefaultState();
         this.updateTargetTabWithId(targetTabId);
+    };
+
+    private updateInstanceGroupExpanded = (payload: ToggleExpandInstanceGroupPayload): void => {
+        const test = this.state.assessmentNavState.selectedTestType;
+        const config = this.assessmentsProvider.forType(test).getVisualizationConfiguration();
+        const assessmentData = config.getAssessmentData(this.state);
+        const instanceGroupsMap = assessmentData.assessmentInstanceGroups;
+
+        if (!isNil(instanceGroupsMap) && !isNil(instanceGroupsMap[payload.groupKey])) {
+            instanceGroupsMap[payload.groupKey].isExpanded = payload.isExpanded;
+            this.emitChanged();
+        }
+    };
+
+    private setAllInstanceGroupsExpanded = (
+        payload: ToggleExpandAllInstanceGroupsPayload,
+    ): void => {
+        const test = this.state.assessmentNavState.selectedTestType;
+        const config = this.assessmentsProvider.forType(test).getVisualizationConfiguration();
+        const assessmentData = config.getAssessmentData(this.state);
+        const instanceGroupsMap = assessmentData.assessmentInstanceGroups;
+
+        if (!isNil(instanceGroupsMap)) {
+            Object.keys(instanceGroupsMap).forEach(key => {
+                instanceGroupsMap[key].isExpanded = payload.isExpanded;
+            });
+            this.emitChanged();
+        }
     };
 
     private getDefaultTestStepForTest(testType: VisualizationType): string {

@@ -33,8 +33,8 @@ const consistentIdentificationHowToTest: JSX.Element = (
             <li>
                 Examine the target page to identify any functional components (such as links,
                 widgets, icons, images, headings, etc.) that appear on multiple pages.
+                <TestAutomaticallyPassedNotice />
             </li>
-            <TestAutomaticallyPassedNotice />
             <li>
                 Use the{' '}
                 <NewTabLink href="https://developers.google.com/web/updates/2018/01/devtools">

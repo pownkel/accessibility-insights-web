@@ -28,6 +28,8 @@ import {
     SelectTestSubviewPayload,
     ToggleActionPayload,
     LoadAssessmentPayload,
+    ToggleExpandInstanceGroupPayload,
+    ToggleExpandAllInstanceGroupsPayload,
 } from './action-payloads';
 import { AssessmentActions } from './assessment-actions';
 
@@ -136,6 +138,14 @@ export class AssessmentActionCreator {
         this.interpreter.registerTypeToPayloadCallback(
             Messages.Visualizations.DetailsView.Select,
             this.onPivotChildSelected,
+        );
+        this.interpreter.registerTypeToPayloadCallback(
+            AssessmentMessages.ToggleExpandAssessmentInstanceGroup,
+            this.onToggleExpandAssessmentInstanceGroup,
+        );
+        this.interpreter.registerTypeToPayloadCallback(
+            AssessmentMessages.ToggleExpandAllAssessmentInstanceGroups,
+            this.onToggleExpandAllAssessmentInstanceGroups,
         );
     }
 
@@ -288,5 +298,17 @@ export class AssessmentActionCreator {
 
     private onPivotChildSelected = (payload: OnDetailsViewOpenPayload): void => {
         this.assessmentActions.updateSelectedPivotChild.invoke(payload);
+    };
+
+    private onToggleExpandAssessmentInstanceGroup = (
+        payload: ToggleExpandInstanceGroupPayload,
+    ): void => {
+        this.assessmentActions.toggleExpandAssessmentInstanceGroup.invoke(payload);
+    };
+
+    private onToggleExpandAllAssessmentInstanceGroups = (
+        payload: ToggleExpandAllInstanceGroupsPayload,
+    ): void => {
+        this.assessmentActions.toggleExpandAllAssessmentInstanceGroups.invoke(payload);
     };
 }

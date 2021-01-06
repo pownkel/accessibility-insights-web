@@ -37,6 +37,8 @@ exports[`PreviewFeaturesContainerTest renders all available preview features 1`]
           "startOverAllAssessments": [Function],
           "switchToTargetTab": [Function],
           "telemetryFactory": undefined,
+          "toggleExpandAllAssessmentInstanceGroups": [Function],
+          "toggleExpandAssessmentInstanceGroup": [Function],
           "undoManualRequirementStatusChange": [Function],
           "undoManualTestStatusChange": [Function],
         },

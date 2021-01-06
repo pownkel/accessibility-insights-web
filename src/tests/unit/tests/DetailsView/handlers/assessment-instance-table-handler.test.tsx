@@ -1,6 +1,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 import { InstanceTableRow } from 'assessments/types/instance-table-data';
+import { IGroup } from 'office-ui-fabric-react';
 import * as React from 'react';
 import { IMock, Mock, Times } from 'typemoq';
 
@@ -392,6 +393,34 @@ describe('AssessmentInstanceTableHandlerTest', () => {
 
         configFactoryMock.verifyAll();
     });
+
+    it.each([true, false])('toggleCollapseInstanceGroup with isCollapsed = %s', isCollapsed => {
+        const groupKey = 'groupKey';
+        const group = {
+            key: groupKey,
+            isCollapsed: isCollapsed,
+        } as IGroup;
+        detailsViewActionMessageCreatorMock
+            .setup(d => d.toggleExpandAssessmentInstanceGroup(groupKey, isCollapsed))
+            .verifiable(Times.once());
+
+        testSubject.toggleCollapseInstanceGroup(group);
+
+        detailsViewActionMessageCreatorMock.verifyAll();
+    });
+
+    it.each([true, false])(
+        'toggleCollapseAllInstanceGroups with isAllCollapsed = %s',
+        isAllCollapsed => {
+            detailsViewActionMessageCreatorMock
+                .setup(d => d.toggleExpandAllAssessmentInstanceGroups(!isAllCollapsed))
+                .verifiable(Times.once());
+
+            testSubject.toggleCollapseAllInstanceGroups(isAllCollapsed);
+
+            detailsViewActionMessageCreatorMock.verifyAll();
+        },
+    );
 
     describe('getGroups', () => {
         const tableItems = [

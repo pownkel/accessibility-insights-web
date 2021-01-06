@@ -145,6 +145,8 @@ export class Messages {
         ScanUpdate: `${messagePrefix}/assessment/scanUpdate`,
         ContinuePreviousAssessment: `${messagePrefix}/assessment/continuePreviousAssessment`,
         LoadAssessment: `${messagePrefix}/assessment/loadAssessment`,
+        ToggleExpandAssessmentInstanceGroup: `${messagePrefix}/assessment/instanceGroup/toggleExpand`,
+        ToggleExpandAllAssessmentInstanceGroups: `${messagePrefix}/assessment/instanceGroup/toggleExpandAll`,
     };
 
     public static readonly FeatureFlags = {

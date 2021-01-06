@@ -75,6 +75,19 @@ export class AssessmentInstanceTableHandler {
         this.detailsViewActionMessageCreator.updateFocusedInstanceTarget(target);
     }
 
+    public toggleCollapseInstanceGroup(group: IGroup): void {
+        this.detailsViewActionMessageCreator.toggleExpandAssessmentInstanceGroup(
+            group.key,
+            group.isCollapsed,
+        );
+    }
+
+    public toggleCollapseAllInstanceGroups(isAllCollapsed: boolean): void {
+        this.detailsViewActionMessageCreator.toggleExpandAllAssessmentInstanceGroups(
+            !isAllCollapsed,
+        );
+    }
+
     public createAssessmentInstanceTableItems(
         instancesMap: DictionaryStringTo<GeneratedAssessmentInstance>,
         assessmentNavState: AssessmentNavState,
@@ -174,7 +187,7 @@ export class AssessmentInstanceTableHandler {
     ): IGroup[] | null {
         // Assume either all items have grouping info, or none do, and return null if it is missing
         if (
-            instanceGroups === undefined ||
+            isNil(instanceGroups) ||
             tableItems.length === 0 ||
             isNil(instancesMap[tableItems[0].key].groupBy)
         ) {
@@ -193,6 +206,7 @@ export class AssessmentInstanceTableHandler {
         tableItems.forEach((item, index) => {
             const instance = instancesMap[item.key];
             const groupKey = instance.groupBy;
+            const groupInfo = instanceGroups[groupKey];
 
             let startNewGroup = false;
             if (currentGroup !== undefined && currentGroup.key !== groupKey) {
@@ -204,10 +218,10 @@ export class AssessmentInstanceTableHandler {
             if (currentGroup === undefined || startNewGroup) {
                 currentGroup = {
                     key: groupKey,
-                    name: instanceGroups[groupKey].title,
+                    name: groupInfo.title,
                     startIndex: index,
                     count: 0,
-                    isCollapsed: !instanceGroups[groupKey].isExpanded,
+                    isCollapsed: !groupInfo.isExpanded,
                 };
             }
         });

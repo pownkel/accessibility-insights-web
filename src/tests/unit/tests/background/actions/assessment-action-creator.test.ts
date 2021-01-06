@@ -14,6 +14,8 @@ import {
     SelectGettingStartedPayload,
     SelectTestSubviewPayload,
     ToggleActionPayload,
+    ToggleExpandAllInstanceGroupsPayload,
+    ToggleExpandInstanceGroupPayload,
 } from 'background/actions/action-payloads';
 import { AssessmentActionCreator } from 'background/actions/assessment-action-creator';
 import { AssessmentActions } from 'background/actions/assessment-actions';
@@ -699,6 +701,59 @@ describe('AssessmentActionCreatorTest', () => {
         testSubject.registerCallbacks();
 
         updateSelectedPivotChildMock.verifyAll();
+    });
+
+    it('handles toggleExpandAssessmentInstanceGroup message', () => {
+        const payload: ToggleExpandInstanceGroupPayload = {
+            groupKey: 'groupKey',
+            isExpanded: true,
+        };
+
+        const toggleExpandAssessmentInstanceGroupMock = createActionMock(payload);
+        const actionsMock = createActionsMock(
+            'toggleExpandAssessmentInstanceGroup',
+            toggleExpandAssessmentInstanceGroupMock.object,
+        );
+        const interpreterMock = createInterpreterMock(
+            Messages.Assessment.ToggleExpandAssessmentInstanceGroup,
+            payload,
+        );
+
+        const testSubject = new AssessmentActionCreator(
+            interpreterMock.object,
+            actionsMock.object,
+            telemetryEventHandlerMock.object,
+        );
+
+        testSubject.registerCallbacks();
+
+        toggleExpandAssessmentInstanceGroupMock.verifyAll();
+    });
+
+    it('handles toggleExpandAllAssessmentInstanceGroups message', () => {
+        const payload: ToggleExpandAllInstanceGroupsPayload = {
+            isExpanded: true,
+        };
+
+        const toggleExpandAllAssessmentInstanceGroupsMock = createActionMock(payload);
+        const actionsMock = createActionsMock(
+            'toggleExpandAllAssessmentInstanceGroups',
+            toggleExpandAllAssessmentInstanceGroupsMock.object,
+        );
+        const interpreterMock = createInterpreterMock(
+            Messages.Assessment.ToggleExpandAllAssessmentInstanceGroups,
+            payload,
+        );
+
+        const testSubject = new AssessmentActionCreator(
+            interpreterMock.object,
+            actionsMock.object,
+            telemetryEventHandlerMock.object,
+        );
+
+        testSubject.registerCallbacks();
+
+        toggleExpandAllAssessmentInstanceGroupsMock.verifyAll();
     });
 
     function setupAssessmentActionsMock(

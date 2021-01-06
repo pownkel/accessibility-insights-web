@@ -1177,6 +1177,39 @@ describe('DetailsViewActionMessageCreatorTest', () => {
         dispatcherMock.verifyAll();
     });
 
+    test('toggleExpandAssessmentInstanceGroup', () => {
+        const payload = {
+            groupKey: 'groupKey',
+            isExpanded: true,
+        };
+        const expectedMessage = {
+            messageType: Messages.Assessment.ToggleExpandAssessmentInstanceGroup,
+            payload: payload,
+        };
+
+        testSubject.toggleExpandAssessmentInstanceGroup(payload.groupKey, payload.isExpanded);
+
+        dispatcherMock.verify(
+            dispatcher => dispatcher.dispatchMessage(It.isValue(expectedMessage)),
+            Times.once(),
+        );
+    });
+
+    test('toggleExpandAllAssessmentInstanceGroups', () => {
+        const isExpanded = true;
+        const expectedMessage = {
+            messageType: Messages.Assessment.ToggleExpandAllAssessmentInstanceGroups,
+            payload: { isExpanded },
+        };
+
+        testSubject.toggleExpandAllAssessmentInstanceGroups(isExpanded);
+
+        dispatcherMock.verify(
+            dispatcher => dispatcher.dispatchMessage(It.isValue(expectedMessage)),
+            Times.once(),
+        );
+    });
+
     function setupTelemetryFactory(
         methodName: keyof TelemetryDataFactory,
         telemetry: any,

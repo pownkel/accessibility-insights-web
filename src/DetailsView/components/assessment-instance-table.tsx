@@ -86,6 +86,16 @@ export class AssessmentInstanceTable extends React.Component<AssessmentInstanceT
             items,
             this.props.instanceGroups,
         );
+        const groupProps = {
+            headerProps: {
+                onToggleCollapse: group =>
+                    this.props.assessmentInstanceTableHandler.toggleCollapseInstanceGroup(group),
+            },
+            onToggleCollapseAll: isAllCollapsed =>
+                this.props.assessmentInstanceTableHandler.toggleCollapseAllInstanceGroups(
+                    isAllCollapsed,
+                ),
+        };
 
         return (
             <div>
@@ -99,6 +109,7 @@ export class AssessmentInstanceTable extends React.Component<AssessmentInstanceT
                     onRenderRow={this.renderRow}
                     onItemInvoked={this.onItemInvoked}
                     groups={groups}
+                    groupProps={groupProps}
                 />
             </div>
         );

@@ -14,6 +14,8 @@ import {
     RemoveFailureInstancePayload,
     SelectTestSubviewPayload,
     ToggleActionPayload,
+    ToggleExpandAllInstanceGroupsPayload,
+    ToggleExpandInstanceGroupPayload,
     UpdateSelectedDetailsViewPayload,
 } from 'background/actions/action-payloads';
 import { AssessmentActions } from 'background/actions/assessment-actions';
@@ -36,6 +38,7 @@ import {
     AssessmentData,
     AssessmentStoreData,
     GeneratedAssessmentInstance,
+    GroupKeyToGroupDataMap,
     InstanceIdToInstanceDataMap,
     ManualTestStepResult,
     PersistedTabInfo,
@@ -1921,6 +1924,97 @@ describe('AssessmentStore', () => {
             .withActionParam(payload)
             .testListenerToBeCalledOnce(initialState, finalState);
     });
+
+    test('updateInstanceGroupExpanded', () => {
+        assessmentsProviderMock
+            .setup(apm => apm.forType(assessmentType))
+            .returns(() => assessmentMock.object);
+
+        assessmentMock.setup(am => am.getVisualizationConfiguration()).returns(() => configStub);
+
+        const initialAssessmentData = {
+            assessmentInstanceGroups: createInstanceGroupsWithExpandedStates([true, true]),
+        } as AssessmentData;
+        const initialState = new AssessmentsStoreDataBuilder(
+            assessmentsProvider,
+            assessmentDataConverterMock.object,
+        )
+            .withAssessment(assessmentKey, initialAssessmentData)
+            .withSelectedTestType(assessmentType)
+            .build();
+
+        const finalAssessmentData = {
+            assessmentInstanceGroups: createInstanceGroupsWithExpandedStates([false, true]),
+        } as AssessmentData;
+        const finalState = new AssessmentsStoreDataBuilder(
+            assessmentsProvider,
+            assessmentDataConverterMock.object,
+        )
+            .withAssessment(assessmentKey, finalAssessmentData)
+            .withSelectedTestType(assessmentType)
+            .build();
+
+        const payload: ToggleExpandInstanceGroupPayload = {
+            groupKey: 'group0',
+            isExpanded: false,
+        };
+
+        createStoreTesterForAssessmentActions('toggleExpandAssessmentInstanceGroup')
+            .withActionParam(payload)
+            .testListenerToBeCalledOnce(initialState, finalState);
+    });
+
+    test('setAllInstanceGroupsExpanded', () => {
+        assessmentsProviderMock
+            .setup(apm => apm.forType(assessmentType))
+            .returns(() => assessmentMock.object);
+
+        assessmentMock.setup(am => am.getVisualizationConfiguration()).returns(() => configStub);
+
+        const initialAssessmentData = {
+            assessmentInstanceGroups: createInstanceGroupsWithExpandedStates([true, false, true]),
+        } as AssessmentData;
+        const initialState = new AssessmentsStoreDataBuilder(
+            assessmentsProvider,
+            assessmentDataConverterMock.object,
+        )
+            .withAssessment(assessmentKey, initialAssessmentData)
+            .withSelectedTestType(assessmentType)
+            .build();
+
+        const finalAssessmentData = {
+            assessmentInstanceGroups: createInstanceGroupsWithExpandedStates([false, false, false]),
+        } as AssessmentData;
+        const finalState = new AssessmentsStoreDataBuilder(
+            assessmentsProvider,
+            assessmentDataConverterMock.object,
+        )
+            .withAssessment(assessmentKey, finalAssessmentData)
+            .withSelectedTestType(assessmentType)
+            .build();
+
+        const payload: ToggleExpandAllInstanceGroupsPayload = {
+            isExpanded: false,
+        };
+
+        createStoreTesterForAssessmentActions('toggleExpandAllAssessmentInstanceGroups')
+            .withActionParam(payload)
+            .testListenerToBeCalledOnce(initialState, finalState);
+    });
+
+    function createInstanceGroupsWithExpandedStates(
+        expandedStates: boolean[],
+    ): GroupKeyToGroupDataMap {
+        const groupsMap: GroupKeyToGroupDataMap = {};
+        expandedStates.forEach((isExpanded, index) => {
+            groupsMap[`group${index}`] = {
+                title: `title${index}`,
+                isExpanded: isExpanded,
+            };
+        });
+
+        return groupsMap;
+    }
 
     function setupDataGeneratorMock(
         persistedData: AssessmentStoreData,

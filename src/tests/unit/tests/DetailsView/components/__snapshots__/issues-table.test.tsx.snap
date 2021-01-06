@@ -44,6 +44,8 @@ exports[`IssuesTableTest automated checks disabled 1`] = `
                 "startOverAllAssessments": [Function],
                 "switchToTargetTab": [Function],
                 "telemetryFactory": undefined,
+                "toggleExpandAllAssessmentInstanceGroups": [Function],
+                "toggleExpandAssessmentInstanceGroup": [Function],
                 "undoManualRequirementStatusChange": [Function],
                 "undoManualTestStatusChange": [Function],
               }
@@ -168,6 +170,8 @@ exports[`IssuesTableTest not scanning, issuesEnabled is true 1`] = `
             "startOverAllAssessments": [Function],
             "switchToTargetTab": [Function],
             "telemetryFactory": undefined,
+            "toggleExpandAllAssessmentInstanceGroups": [Function],
+            "toggleExpandAssessmentInstanceGroup": [Function],
             "undoManualRequirementStatusChange": [Function],
             "undoManualTestStatusChange": [Function],
           },
